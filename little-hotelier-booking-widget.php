@@ -68,7 +68,7 @@ class Lhw_Widget extends WP_Widget {
 	}
 
 	/**
-	 * Constructor
+	 * Widget Constructor
 	 *
 	 * @version	1.0.0
 	 * @since	1.0.0
@@ -97,45 +97,56 @@ class Lhw_Widget extends WP_Widget {
 		$frameborder 		= $instance['frameborder'];
 		$scrolling 			= $instance['scrolling'];
 		$allowtransparency = $instance['allowtransparency'];
-
 		?>
 
 		<p>
-			<label for="lhw_widget_title"><?php _e( 'Title' ); ?>:</label>
-			<input type="text" class="widefat" id="lhw_widget_title" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo esc_attr( $title ); ?>" />
+			<label for="lhw_widget_title"><?php esc_html_e( 'Title' ); ?>:</label>
+			<input type="text" class="widefat" id="lhw_widget_title" name="<?php echo esc_html_e( 'widget-lhw_widget[2][title]' ) ?>" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 
 		<p>
-			<input type="radio" name="<?php echo $this->get_field_name( 'gridmode' ); ?>" value="simple" <?php echo ($gridmode == 'simple') ? 'checked' : '' ?> > Simple
-			<input type="radio" name="<?php echo $this->get_field_name( 'gridmode' ); ?>" value="availabilitygrid" <?php echo ($gridmode == 'availabilitygrid') ? 'checked' : '' ?> > Availability Grid<br>
+			<input type="radio" name="<?php echo esc_html_e( 'widget-lhw_widget[2][gridmode]' ) ?>" value="simple" <?php echo ( 'simple' === $gridmode ) ? 'checked' : '' ?> > Simple
+			<input type="radio" name="<?php echo esc_html_e( 'widget-lhw_widget[2][gridmode]' ) ?>" value="availabilitygrid" <?php echo ( 'availabilitygrid' === $gridmode ) ? 'checked' : '' ?> > Availability Grid<br>
 		</p>
 
 		<p>
-			<label for="lhw_widget_title"><?php _e( 'MYCHANNELCODE' ); ?>:</label>
-			<input type="text" class="lhw_channel" id="lhw_widget_mychannelcode" name="<?php echo $this->get_field_name( 'mychannelcode' ); ?>" value="<?php echo esc_attr( $mychannelcode ); ?>" />
+			<label for="lhw_widget_title"><?php echo esc_html_e( 'MYCHANNELCODE' ); ?>:</label>
+			<input type="text" class="lhw_channel" id="lhw_widget_mychannelcode" name="<?php echo esc_html_e( 'widget-lhw_widget[2][mychannelcode]' ) ?>" value="<?php echo esc_attr( $mychannelcode ); ?>" />
 		</p>
 
 		<?php
 
 	}
 
-	function widget( $args, $instance ) {
-
-		extract( $args );
-		echo $before_widget;
+	/**
+	 * Outputs the widget in the frontend.
+	 *
+	 * @version	1.0.0
+	 * @since	1.0.0
+	 * @param	array $args args for the instance.
+	 * @param	array $instance form instance.
+	 */
+	public function widget( $args, $instance ) {
 		$title     = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		$mychannelcode     = apply_filters( 'widget_title', $instance['mychannelcode'], $instance, $this->id_base );
 		$gridmode     = apply_filters( 'widget_title', $instance['gridmode'], $instance, $this->id_base );
-		if ( $gridmode == 'simple' ) {
-			echo '<iframe src="https://app.littlehotelier.com/properties/' . $mychannelcode . '/booking_widget" height="200" width="210" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
+		if ( 'simple' === $gridmode ) {
+			echo '<iframe src="https://app.littlehotelier.com/properties/' . esc_html( $mychannelcode ) . '/booking_widget" height="200" width="210" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
 		} else {
-			echo '<iframe src="https://app.littlehotelier.com/properties/' . $mychannelcode . '/widget?number_of_days=14" height="300" width="720" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
+			echo '<iframe src="https://app.littlehotelier.com/properties/' . esc_html( $mychannelcode ) . '/widget?number_of_days=14" height="300" width="720" frameborder="0" scrolling="no" allowtransparency="true"></iframe>';
 		}
-
-		echo $after_widget;
 	}
 
-	function update( $new_instance, $old_instance ) {
+	/**
+	 * Widget update function.
+	 *
+	 * @version	1.0.0
+	 * @since	1.0.0
+	 * @param	array $new_instance 	array of the new values for update usage.
+	 * @param	array $old_instance	array of the old values.
+	 * @return	array of the updated widget values.
+	 */
+	public function update( $new_instance, $old_instance ) {
 
 		$instance              = $old_instance;
 		$instance['title']     = wp_strip_all_tags( $new_instance['title'] );
